@@ -1,3 +1,4 @@
+import re
 import time
 from PIL import Image
 from playwright.sync_api import sync_playwright
@@ -73,7 +74,7 @@ def capture_full_page_excluding_headers(page, output_path):
     final_image.save(output_path)
 
 
-def Capture_screenshot(url):
+def Capture_screenshot(url)->str:
     with sync_playwright() as p:
         # 启动 Chromium 浏览器（有头模式）
         # 获取内置 iPhone 14 配置
@@ -190,15 +191,24 @@ def Capture_screenshot(url):
         page.evaluate("window.scrollTo(0, 0);")
         page.wait_for_timeout(100)  # 等待渲染完成
 
+        # 使用正则表达式匹配 answer 后的数字
+        match = re.search(r"answer/(\d+)", url)
+        if match:
+            answer_id = match.group(1)  # 提取第一个捕获组
+            print(answer_id)  # 输出: 1673047173
+        else:
+            print("No answer ID found")
+
         # 调用自定义截屏函数
-        capture_full_page_excluding_headers(page, "screenshot_full_custom.png")
+        capture_full_page_excluding_headers(page, f"images/{answer_id}.png")
         # 获取页面的截图（全页截图）
         # page.screenshot(path='zhihu_answer_fullpage.png', full_page=True)
 
         print("截图成功！")
-
         # 关闭浏览器
         browser.close()
+
+        return answer_id
 
 
 if __name__ == '__main__':
