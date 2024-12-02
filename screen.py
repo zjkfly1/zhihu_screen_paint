@@ -84,131 +84,134 @@ def Capture_screenshot(url)->str:
         # custom_user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1"
 
         # 创建新的浏览器上下文，设置自定义 User-Agent 和视口
-        context = browser.new_context(
-            **iphone_14,
-            ignore_https_errors=True, bypass_csp=True
-        )
-        context.add_cookies([
-            {
-                "domain": ".zhihu.com",
-                "expirationDate": 1747538648.391818,
-                "hostOnly": False,
-                "httpOnly": True,
-                "name": "z_c0",
-                "path": "/",
-                # "sameSite": None,
-                "secure": True,
-                "session": False,
-                "storeId": None,
-                "value": "2|1:0|10:1732585395|4:z_c0|80:MS4xUTZxa0FBQUFBQUFtQUFBQVlBSlZUZGhTS1dndlpaRTd3TzNyUzdBYnlUYlZCenpmcnpiYlpBPT0=|ccd87463fbfadd1d482ca96ca5f7d5a1c71ea4938c5a4213d09cd03e12b3d68a"
-            },
-            {
-                "domain": ".zhihu.com",
-                "expirationDate": 1767332964.270102,
-                "hostOnly": False,
-                "httpOnly": False,
-                "name": "__zse_ck",
-                "path": "/",
-                # "sameSite": None,
-                "secure": True,
-                "session": False,
-                "storeId": None,
-                "value": "003_braK6Ppcyt+tNX205PK5bWsvqrKg/kXJoOANS7p/dAXlveeq/v16T9GpzsZ6WevPmJ+5F3OcQFQm8kQCy=zSdPjHG2awgnxztL5SgvzEY43M"
-            }
-        ])
 
-        page = context.new_page()
-        # 为页面设置额外的 HTTP 请求头
+        try:
+            context = browser.new_context(
+                **iphone_14,
+                ignore_https_errors=True, bypass_csp=True
+            )
+            context.add_cookies([
+                {
+                    "domain": ".zhihu.com",
+                    "expirationDate": 1747538648.391818,
+                    "hostOnly": False,
+                    "httpOnly": True,
+                    "name": "z_c0",
+                    "path": "/",
+                    # "sameSite": None,
+                    "secure": True,
+                    "session": False,
+                    "storeId": None,
+                    "value": "2|1:0|10:1732585395|4:z_c0|80:MS4xUTZxa0FBQUFBQUFtQUFBQVlBSlZUZGhTS1dndlpaRTd3TzNyUzdBYnlUYlZCenpmcnpiYlpBPT0=|ccd87463fbfadd1d482ca96ca5f7d5a1c71ea4938c5a4213d09cd03e12b3d68a"
+                },
+                {
+                    "domain": ".zhihu.com",
+                    "expirationDate": 1767332964.270102,
+                    "hostOnly": False,
+                    "httpOnly": False,
+                    "name": "__zse_ck",
+                    "path": "/",
+                    # "sameSite": None,
+                    "secure": True,
+                    "session": False,
+                    "storeId": None,
+                    "value": "003_bsrRtVJPhvTHTYg0VCIYB8zKr9SFyXEzGGiqUhpb+FlrNd/63+S2VM8NyWp5uLodxogo8xw=TPZC=8XzadyBuckF5BuBuT8pspqaEX0wI8JV"
+                }
+            ])
 
-        # 屏蔽弹窗
-        page.on('dialog', lambda dialog: dialog.dismiss())  # 关闭弹窗
-        page.on('dialog', lambda dialog: dialog.accept())  # 关闭弹窗
+            page = context.new_page()
+            # 为页面设置额外的 HTTP 请求头
 
-        # 设置视口大小
-        page.set_viewport_size({'width': 390, 'height': 844})
+            # 屏蔽弹窗
+            page.on('dialog', lambda dialog: dialog.dismiss())  # 关闭弹窗
+            page.on('dialog', lambda dialog: dialog.accept())  # 关闭弹窗
 
-        # 定义拦截器函数
-        # def block_specific_js(route, request):
-        #     if "mobile-question-routes" in request.url and request.url.endswith(".js"):
-        #         print(f"Blocking JS file: {request.url}")
-        #         route.abort()  # 阻止请求
-        #     elif "8614.app" in request.url and request.url.endswith(".js"):
-        #         print(f"Blocking JS file: {request.url}")
-        #         route.abort()
-        #     # elif "hared-8e52ecb053f5e15cc94ed6c4f91c0a" in request.url and request.url.endswith(".js"):
-        #     #     print(f"Blocking JS file: {request.url}")
-        #     #     route.abort()
-        #     else:
-        #         route.continue_()  # 继续请求
+            # 设置视口大小
+            page.set_viewport_size({'width': 390, 'height': 844})
 
-        # 设置路由拦截器
-        # page.route("**/*", block_specific_js)
+            # 定义拦截器函数
+            # def block_specific_js(route, request):
+            #     if "mobile-question-routes" in request.url and request.url.endswith(".js"):
+            #         print(f"Blocking JS file: {request.url}")
+            #         route.abort()  # 阻止请求
+            #     elif "8614.app" in request.url and request.url.endswith(".js"):
+            #         print(f"Blocking JS file: {request.url}")
+            #         route.abort()
+            #     # elif "hared-8e52ecb053f5e15cc94ed6c4f91c0a" in request.url and request.url.endswith(".js"):
+            #     #     print(f"Blocking JS file: {request.url}")
+            #     #     route.abort()
+            #     else:
+            #         route.continue_()  # 继续请求
 
-        # page.on("dialog", lambda dialog: dialog.dismiss())
-        # page.on('dialog', lambda dialog: dialog.accept())  # 关闭弹窗
+            # 设置路由拦截器
+            # page.route("**/*", block_specific_js)
 
-        # 导航到知乎回答页面
-        page.goto(url)
-        # 屏蔽弹窗
-        # page.on('dialog', lambda dialog: dialog.dismiss())  # 关闭弹窗
-        # page.on('dialog', lambda dialog: dialog.accept())  # 关闭弹窗
+            # page.on("dialog", lambda dialog: dialog.dismiss())
+            # page.on('dialog', lambda dialog: dialog.accept())  # 关闭弹窗
 
-        # time.sleep(5)
+            # 导航到知乎回答页面
+            page.goto(url)
+            # 屏蔽弹窗
+            # page.on('dialog', lambda dialog: dialog.dismiss())  # 关闭弹窗
+            # page.on('dialog', lambda dialog: dialog.accept())  # 关闭弹窗
 
-        # 等待页面加载并确保答案的部分已经加载完成
-        page.wait_for_selector('.OpenInAppButton.is-higher.css-1zhsmz')  # 确保页面中的回答元素加载完成
+            # time.sleep(5)
 
-        print("加载完成，开始删除弹窗元素")
-        page.evaluate("""
-                const element = document.querySelector('.OpenInAppButton.is-higher.css-1zhsmz');
-                element.remove();
-            """)
+            # 等待页面加载并确保答案的部分已经加载完成
+            page.wait_for_selector('.OpenInAppButton.is-higher.css-1zhsmz')  # 确保页面中的回答元素加载完成
 
-        print("加载完成，删除弹窗元素结束")
-
-        #  下滑去除掉弹窗页面
-        page.evaluate(f"window.scrollTo(0, 1200);")
-        page.wait_for_timeout(100)  # 等待渲染完成
-        print("渲染结束。。。弹窗出现")
-        page.evaluate("""
-                    const button122 = document.querySelector('.Button.Button--secondary.Button--grey.css-ebmf5v');
-                    if (button122) {
-                        button122.click();  // 点击按钮
-                    };
+            print("加载完成，开始删除弹窗元素")
+            page.evaluate("""
+                    const element = document.querySelector('.OpenInAppButton.is-higher.css-1zhsmz');
+                    element.remove();
                 """)
-        page.wait_for_timeout(100)  # 等待渲染完成
-        print("渲染结束。。。弹窗删除")
 
-        #  删除最下面的热榜信息
-        page.evaluate("""
-                        const element1ildg7g = document.querySelector('.css-1ildg7g');
-                        if (element1ildg7g) {
-                            element1ildg7g.remove();
-                        }
+            print("加载完成，删除弹窗元素结束")
+
+            #  下滑去除掉弹窗页面
+            page.evaluate(f"window.scrollTo(0, 1200);")
+            page.wait_for_timeout(200)  # 等待渲染完成
+            print("渲染结束。。。弹窗出现")
+            page.evaluate("""
+                        const button122 = document.querySelector('.Button.Button--secondary.Button--grey.css-ebmf5v');
+                        if (button122) {
+                            button122.click();  // 点击按钮
+                        };
                     """)
+            page.wait_for_timeout(500)  # 等待渲染完成
+            print("渲染结束。。。弹窗删除")
 
-        #  回到起点
-        page.evaluate("window.scrollTo(0, 0);")
-        page.wait_for_timeout(100)  # 等待渲染完成
+            #  删除最下面的热榜信息
+            page.evaluate("""
+                            const element1ildg7g = document.querySelector('.css-1ildg7g');
+                            if (element1ildg7g) {
+                                element1ildg7g.remove();
+                            }
+                        """)
 
-        # 使用正则表达式匹配 answer 后的数字
-        match = re.search(r"answer/(\d+)", url)
-        if match:
-            answer_id = match.group(1)  # 提取第一个捕获组
-            print(answer_id)  # 输出: 1673047173
-        else:
-            print("No answer ID found")
+            #  回到起点
+            page.evaluate("window.scrollTo(0, 0);")
+            page.wait_for_timeout(200)  # 等待渲染完成
 
-        # 调用自定义截屏函数
-        capture_full_page_excluding_headers(page, f"images/{answer_id}.png")
-        # 获取页面的截图（全页截图）
-        # page.screenshot(path='zhihu_answer_fullpage.png', full_page=True)
+            # 使用正则表达式匹配 answer 后的数字
+            match = re.search(r"answer/(\d+)", url)
+            if match:
+                answer_id = match.group(1)  # 提取第一个捕获组
+                print(answer_id)  # 输出: 1673047173
+            else:
+                print("No answer ID found")
 
-        print("截图成功！")
+            # 调用自定义截屏函数
+            capture_full_page_excluding_headers(page, f"images/{answer_id}.png")
+            # 获取页面的截图（全页截图）
+            # page.screenshot(path='zhihu_answer_fullpage.png', full_page=True)
+
+            print("截图成功！")
         # 关闭浏览器
-        browser.close()
+        finally:
+            browser.close()
 
-        return answer_id
+            return answer_id
 
 
 if __name__ == '__main__':
