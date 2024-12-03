@@ -3,6 +3,16 @@ import os
 from flask import Flask, jsonify, request, send_from_directory
 
 import screen
+import configparser
+
+# 创建配置解析器对象
+config = configparser.ConfigParser()
+
+# 读取配置文件
+config.read("config.ini")
+
+# 获取 host 配置，若为空则使用默认 localhost
+host = config.get("host", "local", fallback="http://localhost:8000")
 app = Flask(__name__)
 
 # 设置图片所在目录
@@ -32,7 +42,7 @@ def download_image():
         # 下载图片
         answer_id = screen.Capture_screenshot(image_url)
         # 返回保存的本地路径
-        return jsonify({"local_path": f"http://localhost:8000/images/{answer_id}.png"}), 200
+        return jsonify({"local_path": f"{host}/images/{answer_id}.png"}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
