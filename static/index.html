@@ -27,20 +27,34 @@
             height: auto;
             border: 1px solid #ddd;
         }
+        textarea {
+            width: 80%; /* 设置宽度为 80% */
+            max-width: 800px; /* 最大宽度限制 */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: vertical; /* 仅允许垂直调整大小 */
+        }
     </style>
 </head>
 <body>
     <h1>知乎答案截图生成器</h1>
     <div>
         <label for="url">输入知乎答案地址: </label>
-        <input type="text" id="url" placeholder="https://www.zhihu.com/question/512241162/answer/2395686488" />
+        <p></p>
+        <textarea  id="url" placeholder="https://www.zhihu.com/question/512241162/answer/2395686488" rows="5"></textarea>
+        <p></p>
+        <button onclick="extractAndReplaceURL()">提取url地址</button>
+        <p></p>
         <button onclick="generateScreenshot()">点击生成截图</button>
     </div>
     <div id="screenshot-container"></div>
 
     <script>
         async function generateScreenshot() {
-    const url = document.getElementById('url').value;
+    const url = document.getElementById('url').value.trim();
     if (!url) {
         alert("Please enter a URL");
         return;
@@ -81,6 +95,24 @@
     } catch (error) {
         alert("Error: " + error.message);
         container.innerHTML = ''; // 清空等待框内容
+    }
+}
+        function extractAndReplaceURL() {
+    // 获取用户输入并去除首尾空格
+    const text = document.getElementById('url').value.trim();
+
+    // 正则表达式匹配 URL
+    const urlPattern = /https?:\/\/[^\s]+/g; // 匹配 http 或 https 开头的 URL
+    const urls = text.match(urlPattern); // 获取所有匹配的 URL
+
+    // 获取文本框元素
+    const textInput = document.getElementById('url');
+
+    if (urls && urls.length > 0) {
+        const firstUrl = urls[0]; // 提取第一个 URL
+        textInput.value = firstUrl; // 将 URL 回写到文本框中
+    } else {
+        alert('No URL found in the input!'); // 如果没有匹配到 URL，弹出提示
     }
 }
     </script>
