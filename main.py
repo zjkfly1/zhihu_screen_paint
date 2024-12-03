@@ -19,10 +19,6 @@ app = Flask(__name__)
 IMAGE_FOLDER = "images"
 os.makedirs(IMAGE_FOLDER, exist_ok=True)
 
-@app.route('/')
-def home():
-    return "Hello, World!"
-
 
 @app.route('/api/data', methods=['GET'])
 def get_data():
@@ -56,6 +52,10 @@ def serve_image(filename):
         return send_from_directory(IMAGE_FOLDER, filename)
     except FileNotFoundError:
         return {"error": "File not found"}, 404
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

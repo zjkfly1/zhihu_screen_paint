@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知乎答案截图生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+        #screenshot-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>知乎答案截图生成器</h1>
+    <div>
+        <label for="url">输入知乎答案地址: </label>
+        <input type="text" id="url" placeholder="https://www.zhihu.com/question/512241162/answer/2395686488" />
+        <button onclick="generateScreenshot()">点击生成截图</button>
+    </div>
+    <div id="screenshot-container"></div>
+
+    <script>
+        async function generateScreenshot() {
+    const url = document.getElementById('url').value;
+    if (!url) {
+        alert("Please enter a URL");
+        return;
+    }
+
+    // 显示等待框
+    const container = document.getElementById('screenshot-container');
+    container.innerHTML = '<p>正在生成截图。请稍等</p>';
+
+    try {
+        const response = await fetch('/download_image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url: url })
+        });
+
+        if (response.ok) {
+            const data = await response.json(); // 处理 JSON 响应
+            const imageUrl = data.local_path; // 获取图片 URL
+
+            // 创建图片元素并展示
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = "Screenshot of the URL";
+            img.style.maxWidth = "100%";
+            img.style.border = "1px solid #ddd";
+
+            // 更新页面
+            container.innerHTML = ''; // 清空等待框内容
+            container.appendChild(img);
+        } else {
+            const errorData = await response.json();
+            alert(errorData.error || "An error occurred while generating the screenshot.");
+            container.innerHTML = ''; // 清空等待框内容
+        }
+    } catch (error) {
+        alert("Error: " + error.message);
+        container.innerHTML = ''; // 清空等待框内容
+    }
+}
+    </script>
+</body>
+</html>
