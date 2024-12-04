@@ -79,7 +79,8 @@ def Capture_screenshot(url)->str:
         # 启动 Chromium 浏览器（有头模式）
         # 获取内置 iPhone 14 配置
         iphone_14 = p.devices['iPhone 14 Plus']
-        browser = p.chromium.launch(headless=True)  # headless=False 启用有头浏览器
+        browser = p.chromium.launch(
+            headless=False)  # headless=False 启用有头浏览器
         # 自定义 User-Agent 字符串
         # custom_user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1"
 
@@ -159,26 +160,28 @@ def Capture_screenshot(url)->str:
 
             # 等待页面加载并确保答案的部分已经加载完成
             page.wait_for_selector('.OpenInAppButton.is-higher.css-1zhsmz')  # 确保页面中的回答元素加载完成
-
             print("加载完成，开始删除弹窗元素")
-            page.evaluate("""
-                    const element = document.querySelector('.OpenInAppButton.is-higher.css-1zhsmz');
-                    element.remove();
-                """)
-
-            print("加载完成，删除弹窗元素结束")
 
             #  下滑去除掉弹窗页面
             page.evaluate(f"window.scrollTo(0, 1200);")
-            page.wait_for_timeout(200)  # 等待渲染完成
             print("渲染结束。。。弹窗出现")
+
+            page.wait_for_timeout(200)  # 等待渲染完成
+            page.evaluate("""
+                                const element = document.querySelector('.OpenInAppButton.is-higher.css-1zhsmz');
+                                element.remove();
+                            """)
+
+            print("加载完成，删除弹窗元素结束")
+            page.wait_for_timeout(100)  # 等待渲染完成
+
             page.evaluate("""
                         const button122 = document.querySelector('.Button.Button--secondary.Button--grey.css-ebmf5v');
                         if (button122) {
                             button122.click();  // 点击按钮
                         };
                     """)
-            page.wait_for_timeout(200)  # 等待渲染完成
+            page.wait_for_timeout(100)  # 等待渲染完成
             print("渲染结束。。。弹窗删除")
 
             #  删除最下面的热榜信息
@@ -210,11 +213,15 @@ def Capture_screenshot(url)->str:
             # page.screenshot(path='zhihu_answer_fullpage.png', full_page=True)
 
             print("截图成功！")
+            return answer_id
+        except Exception as e:
+            # 捕获任何异常并打印错误信息
+            print("An unexpected error occurred:", e)
+            raise e
+
         # 关闭浏览器
         finally:
             browser.close()
-
-            return answer_id
 
 
 if __name__ == '__main__':
