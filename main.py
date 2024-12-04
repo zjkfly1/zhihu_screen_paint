@@ -1,9 +1,12 @@
 import os
+from datetime import datetime
 
 from flask import Flask, jsonify, request, send_from_directory
 
 import screen
 import configparser
+
+from utils import print_current_time
 
 # 创建配置解析器对象
 config = configparser.ConfigParser()
@@ -34,6 +37,8 @@ def download_image():
         print(image_url)
         if not image_url:
             return jsonify({"error": "No URL provided"}), 400
+
+        print_current_time(1)
 
         # 下载图片
         answer_id = screen.Capture_screenshot(image_url)

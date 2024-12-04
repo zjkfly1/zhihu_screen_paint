@@ -4,6 +4,8 @@ from PIL import Image
 from playwright.sync_api import sync_playwright
 from io import BytesIO
 
+from utils import print_current_time
+
 
 def capture_full_page_excluding_headers(page, output_path):
     # 固定的顶部高度和底部高度
@@ -76,10 +78,12 @@ def capture_full_page_excluding_headers(page, output_path):
 
 def Capture_screenshot(url)->str:
     with sync_playwright() as p:
+        print_current_time(2)
         # 获取内置 iPhone 14 配置
         iphone_14 = p.devices['iPhone 14 Plus']
         browser = p.chromium.launch(
-            headless=False)  # headless=False 启用有头浏览器
+            headless=True)  # headless=False 启用有头浏览器
+        print_current_time(3)
 
         context = browser.new_context(
             **iphone_14,
@@ -114,9 +118,12 @@ def Capture_screenshot(url)->str:
             }
         ])
 
+        print_current_time(4)
+
         try:
             page = context.new_page()
             # 为页面设置额外的 HTTP 请求头
+            print_current_time(6)
 
             # 屏蔽弹窗
             # page.on('dialog', lambda dialog: dialog.dismiss())  # 关闭弹窗
@@ -156,12 +163,15 @@ def Capture_screenshot(url)->str:
             # 等待页面加载并确保答案的部分已经加载完成
             page.wait_for_selector('.OpenInAppButton.is-higher.css-1zhsmz')  # 确保页面中的回答元素加载完成
             print("加载完成，开始删除弹窗元素")
+            print_current_time(7)
 
             #  下滑去除掉弹窗页面
             page.evaluate(f"window.scrollTo(0, 1200);")
             print("渲染结束。。。弹窗出现")
 
             page.wait_for_timeout(200)  # 等待渲染完成
+            print_current_time(8)
+
             page.evaluate("""
                                 const element = document.querySelector('.OpenInAppButton.is-higher.css-1zhsmz');
                                 element.remove();
@@ -169,6 +179,7 @@ def Capture_screenshot(url)->str:
 
             print("加载完成，删除弹窗元素结束")
             page.wait_for_timeout(100)  # 等待渲染完成
+            print_current_time(9)
 
             page.evaluate("""
                         const button122 = document.querySelector('.Button.Button--secondary.Button--grey.css-ebmf5v');
@@ -178,6 +189,7 @@ def Capture_screenshot(url)->str:
                     """)
             page.wait_for_timeout(100)  # 等待渲染完成
             print("渲染结束。。。弹窗删除")
+            print_current_time(10)
 
             #  删除最下面的热榜信息
             page.evaluate("""
@@ -188,10 +200,12 @@ def Capture_screenshot(url)->str:
                         """)
 
             page.wait_for_timeout(100)  # 等待渲染完成
+            print_current_time(11)
 
             #  回到起点
             page.evaluate("window.scrollTo(0, 0);")
             page.wait_for_timeout(100)  # 等待渲染完成
+            print_current_time(12)
 
             # 使用正则表达式匹配 answer 后的数字
             match = re.search(r"answer/(\d+)", url)
@@ -206,6 +220,7 @@ def Capture_screenshot(url)->str:
             capture_full_page_excluding_headers(page, f"images/{answer_id}.png")
             # 获取页面的截图（全页截图）
             # page.screenshot(path='zhihu_answer_fullpage.png', full_page=True)
+            print_current_time(13)
 
             print("截图成功！")
             return answer_id
