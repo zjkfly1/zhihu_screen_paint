@@ -79,7 +79,7 @@ def Capture_screenshot(url)->str:
         # 启动 Chromium 浏览器（有头模式）
         # 获取内置 iPhone 14 配置
         iphone_14 = p.devices['iPhone 14 Plus']
-        browser = p.chromium.launch(headless=False)  # headless=False 启用有头浏览器
+        browser = p.chromium.launch(headless=True)  # headless=False 启用有头浏览器
         # 自定义 User-Agent 字符串
         # custom_user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1"
 
@@ -170,7 +170,7 @@ def Capture_screenshot(url)->str:
 
             #  下滑去除掉弹窗页面
             page.evaluate(f"window.scrollTo(0, 1200);")
-            page.wait_for_timeout(100)  # 等待渲染完成
+            page.wait_for_timeout(200)  # 等待渲染完成
             print("渲染结束。。。弹窗出现")
             page.evaluate("""
                         const button122 = document.querySelector('.Button.Button--secondary.Button--grey.css-ebmf5v');
@@ -178,7 +178,7 @@ def Capture_screenshot(url)->str:
                             button122.click();  // 点击按钮
                         };
                     """)
-            page.wait_for_timeout(100)  # 等待渲染完成
+            page.wait_for_timeout(200)  # 等待渲染完成
             print("渲染结束。。。弹窗删除")
 
             #  删除最下面的热榜信息
@@ -188,6 +188,8 @@ def Capture_screenshot(url)->str:
                                 element1ildg7g.remove();
                             }
                         """)
+
+            page.wait_for_timeout(100)  # 等待渲染完成
 
             #  回到起点
             page.evaluate("window.scrollTo(0, 0);")
