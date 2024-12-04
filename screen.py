@@ -76,50 +76,45 @@ def capture_full_page_excluding_headers(page, output_path):
 
 def Capture_screenshot(url)->str:
     with sync_playwright() as p:
-        # 启动 Chromium 浏览器（有头模式）
         # 获取内置 iPhone 14 配置
         iphone_14 = p.devices['iPhone 14 Plus']
         browser = p.chromium.launch(
             headless=False)  # headless=False 启用有头浏览器
-        # 自定义 User-Agent 字符串
-        # custom_user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1"
 
-        # 创建新的浏览器上下文，设置自定义 User-Agent 和视口
+        context = browser.new_context(
+            **iphone_14,
+            ignore_https_errors=True, bypass_csp=True
+        )
+        context.add_cookies([
+            {
+                "domain": ".zhihu.com",
+                "expirationDate": 1747538648.391818,
+                "hostOnly": False,
+                "httpOnly": True,
+                "name": "z_c0",
+                "path": "/",
+                # "sameSite": None,
+                "secure": True,
+                "session": False,
+                "storeId": None,
+                "value": "2|1:0|10:1732585395|4:z_c0|80:MS4xUTZxa0FBQUFBQUFtQUFBQVlBSlZUZGhTS1dndlpaRTd3TzNyUzdBYnlUYlZCenpmcnpiYlpBPT0=|ccd87463fbfadd1d482ca96ca5f7d5a1c71ea4938c5a4213d09cd03e12b3d68a"
+            },
+            {
+                "domain": ".zhihu.com",
+                "expirationDate": 1767332964.270102,
+                "hostOnly": False,
+                "httpOnly": False,
+                "name": "__zse_ck",
+                "path": "/",
+                # "sameSite": None,
+                "secure": True,
+                "session": False,
+                "storeId": None,
+                "value": "003_br/UAMZxxOMTQAJXUNKy7CLkxlHIFHqQotvA8quVcdI6+xhvB3gaRxob7oEUdA15LD3Zpz3/mJr14+BiiAejGHi+E1KbVU1JN0i1Ja/OwZWS"
+            }
+        ])
 
         try:
-            context = browser.new_context(
-                **iphone_14,
-                ignore_https_errors=True, bypass_csp=True
-            )
-            context.add_cookies([
-                {
-                    "domain": ".zhihu.com",
-                    "expirationDate": 1747538648.391818,
-                    "hostOnly": False,
-                    "httpOnly": True,
-                    "name": "z_c0",
-                    "path": "/",
-                    # "sameSite": None,
-                    "secure": True,
-                    "session": False,
-                    "storeId": None,
-                    "value": "2|1:0|10:1732585395|4:z_c0|80:MS4xUTZxa0FBQUFBQUFtQUFBQVlBSlZUZGhTS1dndlpaRTd3TzNyUzdBYnlUYlZCenpmcnpiYlpBPT0=|ccd87463fbfadd1d482ca96ca5f7d5a1c71ea4938c5a4213d09cd03e12b3d68a"
-                },
-                {
-                    "domain": ".zhihu.com",
-                    "expirationDate": 1767332964.270102,
-                    "hostOnly": False,
-                    "httpOnly": False,
-                    "name": "__zse_ck",
-                    "path": "/",
-                    # "sameSite": None,
-                    "secure": True,
-                    "session": False,
-                    "storeId": None,
-                    "value": "003_br/UAMZxxOMTQAJXUNKy7CLkxlHIFHqQotvA8quVcdI6+xhvB3gaRxob7oEUdA15LD3Zpz3/mJr14+BiiAejGHi+E1KbVU1JN0i1Ja/OwZWS"
-                }
-            ])
-
             page = context.new_page()
             # 为页面设置额外的 HTTP 请求头
 
