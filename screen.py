@@ -115,7 +115,7 @@ def Capture_screenshot(url)->str:
                     "secure": True,
                     "session": False,
                     "storeId": None,
-                    "value": "003_bsrRtVJPhvTHTYg0VCIYB8zKr9SFyXEzGGiqUhpb+FlrNd/63+S2VM8NyWp5uLodxogo8xw=TPZC=8XzadyBuckF5BuBuT8pspqaEX0wI8JV"
+                    "value": "003_br/UAMZxxOMTQAJXUNKy7CLkxlHIFHqQotvA8quVcdI6+xhvB3gaRxob7oEUdA15LD3Zpz3/mJr14+BiiAejGHi+E1KbVU1JN0i1Ja/OwZWS"
                 }
             ])
 
